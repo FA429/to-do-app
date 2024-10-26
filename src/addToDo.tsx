@@ -1,93 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { Todo } from "./types";
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
 
-const AddToDo: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]); 
-  const [error, setError] = useState<string | null>(null); 
-  const [currentPage, setCurrentPage] = useState<number>(1); 
+const AddToDo = ({ onAddTodo }) => {
+  const [title, setTitle] = useState('');
+  const [completed, setCompleted] = useState(false);
 
-  const todosPerPage = 20; 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/todos"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch todos");
-        }
-        const data: Todo[] = await response.json();
-        setTodos(data);
-      } catch (error) {
-        setError((error as Error).message);
-      }
-    };
-
-    fetchTodos();
-  }, []);
-
-  useEffect(() => {
-    const storageTodos = localStorage.getItem("todos");
-    if (storageTodos) {
-      setTodos(JSON.parse(storageTodos));
-    } else {
-      localStorage.setItem("todos", JSON.stringify(todos));
+    if (title.trim() === '') {
+      alert('Please enter a title for the todo.');
+      return;
     }
-  }, [todos]);
 
-  const handleDelete = (id: number) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-  };
-
-  const indexOfLastTodo = currentPage * todosPerPage;
-  const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-  const currentTodos = todos.slice(indexOfFirstTodo, indexOfLastTodo);
-
-  
-  const nextPage = () => {
-    if (currentPage < Math.ceil(todos.length / todosPerPage)) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+    onAddTodo(title, completed);
+    setTitle('');
+    setCompleted(false);
   };
 
   return (
-    <div>
-      <h1>Todo List</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {currentTodos.map((todo) => (
-          <li key={todo.id}>
-            <strong>{todo.title}</strong> - {todo.completed ? "✅" : "❌"}
-            <button onClick={() => handleDelete(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+<form
+  onSubmit={handleSubmit}
+  className="flex flex-col items-center justify-center h-screen space-y-4"
+>
+  <Input
+    type="text"
+    placeholder="Enter title"
+    value={title}
+    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+    className="input"
+  />
+  <input
+    type="checkbox"
+    checked={completed}
+    onChange={(e: ChangeEvent<HTMLInputElement>) => setCompleted(e.target.checked)}
+  />
+  <Button type="submit">Add ToDo</Button>
+</form>
 
-      
-      <div>
-        <button onClick={prevPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {Math.ceil(todos.length / todosPerPage)}
-        </span>
-        <button
-          onClick={nextPage}
-          disabled={currentPage === Math.ceil(todos.length / todosPerPage)}
-        >
-          Next
-        </button>
-      </div>
-    </div>
   );
 };
 
