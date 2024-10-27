@@ -19,7 +19,7 @@ function AddToDo({ setTodos, todos }: AddToDoProps) {
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    if (error) setError(null); 
+    if (error) setError(null);
   };
 
   const handleChangeCompleted = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,8 @@ function AddToDo({ setTodos, todos }: AddToDoProps) {
     e.preventDefault();
 
     if (title.trim() === "") {
-      setError("The title cannot be empty.");       return;
+      setError("The title cannot be empty.");
+      return;
     }
 
     const newToDo: Todo = {
@@ -69,7 +70,7 @@ function AddToDo({ setTodos, todos }: AddToDoProps) {
 
         <Button type="submit">Add ToDo</Button>
       </div>
-      {error && <p className="text-red-500 mt-1">{error}</p>} 
+      {error && <p className="text-red-500 mt-1">{error}</p>}
     </form>
   );
 }

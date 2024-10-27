@@ -16,11 +16,10 @@ export const TodoManager = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [filter, setFilter] = useState<"all" | "completed" | "pending">("all"); // حالة الفلتر
+  const [filter, setFilter] = useState<"all" | "completed" | "pending">("all"); 
 
   const todosPerPage = 20;
 
-  // تطبيق الفلتر على المهام
   const filteredTodos = todos.filter((todo) => {
     if (filter === "all") return true;
     if (filter === "completed") return todo.completed;
