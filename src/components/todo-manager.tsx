@@ -5,7 +5,7 @@ import { Todos } from "./todos.tsx";
 import { Todo } from "../types";
 import "../App.css";
 import AddToDo from "./ui/addToDo";
-import { TaskProgress } from "./TaskProgress"; // استيراد دائرتي التقدم
+import { TaskProgress } from "./TaskProgress"; 
 
 export const TodoManager = () => {
   const [todos, setTodos] = useState<Todo[]>(() => {
